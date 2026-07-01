@@ -3,6 +3,7 @@
 <hr>
 
 <img width="487" height="809" alt="Tela Principal" src="https://github.com/user-attachments/assets/9775d88d-f26b-459b-bcfb-5c168d2a5a78" />
+<br/>
 ## Propósito
 Esse projeto atende a uma necessidade que tenho sentido, após uma má experiência com um player do Youtube que, mesmo com músicas/vídeos baixadas, eles ficam indisponíveis com frequência.
 
