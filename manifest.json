@@ -1,0 +1,16 @@
+{
+  "name": "Blay Audio Player",
+  "short_name": "BlayPlayer",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#121212",
+  "theme_color": "#1a1a1a",
+  "description": "Offline-capable music player for downloaded audio files.",
+  "icons": [
+    {
+      "src": "assets/icons/icon.svg",
+      "type": "image/svg+xml",
+      "sizes": "any"
+    }
+  ]
+}
