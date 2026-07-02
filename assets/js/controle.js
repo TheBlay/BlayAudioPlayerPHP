@@ -77,31 +77,29 @@ function fetchAndSyncPlaylist() {
   if (libraryStatus) {
     libraryStatus.textContent = 'Sincronizando biblioteca...';
   }
-  return fetch('buscar_musicas.php')
-    .then(response => response.json())
-    .then(data => {
-      if (!Array.isArray(data)) {
-        return;
-      }
-      musicas = data.map(createMusicInstance);
-      storage.savePlaylist({ musicas, savedAt: new Date().toISOString() })
-        .catch(err => console.warn('Failed to save playlist:', err));
-      if (musicas.length > 0) {
-        indiceAtual = indiceAtual % musicas.length;
-        carregarMusica(indiceAtual);
-      }
+
+  return storage.loadPlaylist()
+    .then(savedPlaylist => {
+      const playlistTracks = Array.isArray(savedPlaylist?.musicas) ? savedPlaylist.musicas : [];
+      musicas = playlistTracks.map(createMusicInstance);
       renderLibraryTable();
       renderPlayerPlaylist();
-      updateStatus('Online: biblioteca sincronizada.');
+
+      if (musicas.length > 0) {
+        indiceAtual = Math.min(indiceAtual, musicas.length - 1);
+        carregarMusica(indiceAtual);
+      } else {
+        updateStatus('Nenhuma música disponível.', true);
+      }
+
       if (libraryStatus) {
-        libraryStatus.textContent = `Total de músicas: ${musicas.length}`;
+        libraryStatus.textContent = musicas.length > 0
+          ? `Total de músicas: ${musicas.length}`
+          : 'Biblioteca local vazia';
       }
     })
     .catch(err => {
-      console.warn('Failed to fetch playlist:', err);
-      if (musicas.length > 0) {
-        carregarMusica(indiceAtual);
-      }
+      console.warn('Failed to load local playlist:', err);
       updateStatus('Offline: usando playlist em cache.', true);
       if (libraryStatus) {
         libraryStatus.textContent = `Biblioteca offline (${musicas.length} músicas)`;
@@ -205,33 +203,21 @@ function renderLibraryTable() {
 }
 
 function removeMusicById(id) {
-  fetch('remove_musica.php', {
-    method: 'DELETE',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ id })
-  })
-    .then(response => response.json())
-    .then(data => {
-      if (data.error) {
-        console.warn('Falha ao remover música:', data.error);
-        return;
-      }
-      musicas = musicas.filter(music => music.id !== id);
-      renderLibraryTable();
-      storage.savePlaylist({ musicas, savedAt: new Date().toISOString() })
-        .catch(err => console.warn('Failed to save playlist:', err));
-      if (indiceAtual >= musicas.length) {
-        indiceAtual = 0;
-      }
-      if (musicas.length > 0) {
-        carregarMusica(indiceAtual);
-      } else {
-        audio.removeAttribute('src');
-        audio.load();
-        updateStatus('Nenhuma música disponível.', true);
-      }
-    })
-    .catch(err => console.warn('Falha ao remover música:', err));
+  musicas = musicas.filter(music => music.id !== id);
+  renderLibraryTable();
+  storage.savePlaylist({ musicas, savedAt: new Date().toISOString() })
+    .catch(err => console.warn('Failed to save playlist:', err));
+
+  if (indiceAtual >= musicas.length) {
+    indiceAtual = 0;
+  }
+  if (musicas.length > 0) {
+    carregarMusica(indiceAtual);
+  } else {
+    audio.removeAttribute('src');
+    audio.load();
+    updateStatus('Nenhuma música disponível.', true);
+  }
 }
 
 function initControls() {
@@ -276,22 +262,28 @@ window.addEventListener('load', async () => {
   if (!window.MusicPlayerUI) {
     console.warn('Music player UI not available');
   }
+
   try {
-    const response = await fetch('buscar_musicas.php');
-    const data = await response.json();
-    if (Array.isArray(data)) {
-      musicas = data.map(createMusicInstance);
-      renderLibraryTable();
-      renderPlayerPlaylist();
-      if (musicas.length > 0) {
-        carregarMusica(0);
-      }
-      if (libraryStatus) {
-        libraryStatus.textContent = `Total de músicas: ${musicas.length}`;
-      }
+    const savedPlaylist = await storage.loadPlaylist();
+    const playlistTracks = Array.isArray(savedPlaylist?.musicas) ? savedPlaylist.musicas : [];
+    musicas = playlistTracks.map(createMusicInstance);
+    renderLibraryTable();
+    renderPlayerPlaylist();
+
+    if (musicas.length > 0) {
+      carregarMusica(0);
+    } else {
+      updateStatus('Nenhuma música disponível.', true);
+    }
+
+    if (libraryStatus) {
+      libraryStatus.textContent = musicas.length > 0
+        ? `Total de músicas: ${musicas.length}`
+        : 'Biblioteca local vazia';
     }
   } catch (error) {
     console.warn('Falha ao carregar biblioteca:', error);
+    updateStatus('Falha ao carregar biblioteca local.', true);
   }
 });
 

@@ -1,12 +1,11 @@
-const CACHE_NAME = 'blay-audio-player-v2';
-const SCOPE_PATH = new URL(self.registration.scope).pathname;
+const CACHE_NAME = 'blay-audio-player-v4';
 const CORE_ASSETS = [
-  'index.php',
-  'buscar_musicas.php',
+  'index.html',
   'assets/js/controle.js',
   'assets/js/app.js',
   'assets/js/storage.js',
   'assets/js/models.js',
+  'assets/js/music-player.js',
   'assets/css/styles.css',
   'manifest.json',
   'assets/icons/icon.svg',
@@ -17,7 +16,7 @@ self.addEventListener('install', event => {
   self.skipWaiting();
   event.waitUntil(
     caches.open(CACHE_NAME)
-      .then(cache => cache.addAll(CORE_ASSETS))
+.then(cache => cache.addAll(CORE_ASSETS))
   );
 });
 
@@ -31,30 +30,22 @@ self.addEventListener('activate', event => {
 });
 
 self.addEventListener('fetch', event => {
-  const request = event.request;
+  const { request } = event;
+
   if (request.method !== 'GET') {
     return;
   }
 
   const url = new URL(request.url);
-  if (url.origin !== location.origin) {
+  if (url.origin !== self.location.origin) {
     return;
   }
 
-  const relativePath = getRelativePath(url);
+  const pathname = url.pathname.replace(/\/+$/, '') || '/';
+  const relativePath = pathname === '/' ? 'index.html' : pathname.replace(/^\//, '');
 
-  if (relativePath === 'buscar_musicas.php') {
+  if (request.mode === 'navigate' || relativePath === 'index.html') {
     event.respondWith(networkFirst(request));
-    return;
-  }
-
-  if (relativePath === 'index.php' || request.mode === 'navigate') {
-    event.respondWith(networkFirst(request));
-    return;
-  }
-
-  if (request.destination === 'audio' || request.destination === 'image' || request.destination === 'font') {
-    event.respondWith(cacheFirst(request));
     return;
   }
 
@@ -62,19 +53,12 @@ self.addEventListener('fetch', event => {
     event.respondWith(cacheFirst(request));
     return;
   }
+
+  if (request.destination === 'audio' || request.destination === 'image' || request.destination === 'font') {
+    event.respondWith(cacheFirst(request));
+    return;
+  }
 });
-
-function getRelativePath(url) {
-  let pathname = url.pathname;
-  if (pathname.startsWith(SCOPE_PATH)) {
-    pathname = pathname.slice(SCOPE_PATH.length);
-  }
-  if (pathname === '' || pathname === '/') {
-    return 'index.php';
-  }
-  return pathname.startsWith('/') ? pathname.slice(1) : pathname;
-}
-
 
 async function cacheFirst(request) {
   const cache = await caches.open(CACHE_NAME);
@@ -82,6 +66,7 @@ async function cacheFirst(request) {
   if (cached) {
     return cached;
   }
+
   const response = await fetch(request);
   if (response && response.ok) {
     cache.put(request, response.clone());
@@ -91,6 +76,7 @@ async function cacheFirst(request) {
 
 async function networkFirst(request) {
   const cache = await caches.open(CACHE_NAME);
+
   try {
     const response = await fetch(request);
     if (response && response.ok) {
@@ -102,39 +88,13 @@ async function networkFirst(request) {
     if (cached) {
       return cached;
     }
-    return new Response(JSON.stringify([]), {
+
+    return new Response('Offline', {
+      status: 503,
+      statusText: 'Offline',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'text/plain'
       }
     });
-  }
-}
-
-self.addEventListener('message', event => {
-  if (!event.data || event.data.type !== 'PRELOAD_AUDIO') {
-    return;
-  }
-  event.waitUntil(preloadAudioFile(event.data.url));
-});
-
-async function preloadAudioFile(url) {
-  if (!url) {
-    return;
-  }
-
-  try {
-    const cache = await caches.open(CACHE_NAME);
-    const request = new Request(url, { mode: 'same-origin' });
-    const cached = await cache.match(request);
-    if (cached) {
-      return cached;
-    }
-    const response = await fetch(request);
-    if (response && response.ok) {
-      await cache.put(request, response.clone());
-      return response;
-    }
-  } catch (error) {
-    console.warn('Audio preload failed:', error);
   }
 }
