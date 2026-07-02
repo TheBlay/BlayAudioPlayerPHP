@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#1a1a1a">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <title>Blay Audio Player</title>
+    <!-- REPO: https://github.com/TheBlay/BlayAudioPlayer 
+     Criado por: Henrique Blay
+     Data de criação: 01/06/2026
+    -->
+</head>
+<body>
+    <div class="app-shell">
+        <header class="app-header">
+            <div class="brand-row">
+                <img class="app-icon" src="assets/icons/icon.svg" alt="Blay logo">
+                <div>
+                    <h1>Blay Audio Player</h1>
+                    <p>Música offline e gerenciamento de playlists.</p>
+                </div>
+            </div>
+            <nav class="app-nav">
+                <button type="button" data-view="player-view" class="active">Player</button>
+                <button type="button" data-view="library-view">Library</button>
+                <button type="button" data-view="upload-view">Upload</button>
+            </nav>
+        </header>
+
+        <main class="app-content">
+            <section id="player-view" class="view active">
+                <div class="player-container">
+                    <img id="capa" src="assets/icons/capa-default.svg" alt="Capa do Álbum" width="200">
+                    <h2 id="titulo">Selecione uma música</h2>
+                    <h3 id="artista">Artista</h3>
+
+                    <audio id="audio-player" controls></audio>
+
+                    <div class="controles">
+                        <button id="btn-anterior">Anterior</button>
+                        <button id="btn-play-pause">Play</button>
+                        <button id="btn-proxima">Próxima</button>
+                    </div>
+                    <div id="status">Sem músicas carregadas</div>
+
+                    <div class="player-playlist">
+                        <h3></h3>
+                        <ul id="player-playlist" class="playlist-list"></ul>
+                    </div>
+                </div>
+            </section>
+
+            <section id="library-view" class="view hidden">
+                <div class="panel">
+                    <div class="panel-header">
+                        <h2>Biblioteca</h2>
+                        <span id="library-status" class="section-status"></span>
+                    </div>
+                    <div class="library-filters">
+                        <label>
+                            Álbum
+                            <select id="filter-album">
+                                <option value="">Todos os álbuns</option>
+                            </select>
+                        </label>
+                        <label>
+                            Tag
+                            <select id="filter-tag">
+                                <option value="">Todas as tags</option>
+                            </select>
+                        </label>
+                        <label>
+                            Busca
+                            <input id="search-input" type="search" placeholder="Título, artista ou álbum">
+                        </label>
+                    </div>
+                    <div id="filter-chip-list" class="chip-list"></div>
+                    <div class="table-wrapper">
+                        <table class="library-table">
+                            <thead>
+                                <tr>
+                                    <th>Título</th>
+                                    <th>Artista</th>
+                                    <th>Álbum</th>
+                                    <th>Tags</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="library-table-body">
+                                <tr><td colspan="5">Carregando biblioteca...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <section id="upload-view" class="view hidden">
+                <div class="panel">
+                    <div class="panel-header">
+                        <h2>Upload de música</h2>
+                        <span id="upload-status" class="section-status">Envie uma música com tags e álbum.</span>
+                    </div>
+                    <form id="upload-form" class="upload-form">
+                        <label>
+                            Título
+                            <input type="text" name="titulo" required placeholder="Nome da música">
+                        </label>
+                        <label>
+                            Artista
+                            <input type="text" name="artista" required placeholder="Nome do artista">
+                        </label>
+                        <label>
+                            Arquivo de áudio
+                            <input type="file" name="audio_file" accept="audio/*" required>
+                        </label>
+                        <label>
+                            Imagem de capa (opcional)
+                            <input type="file" name="cover_file" accept="image/*">
+                        </label>
+                        <div class="row-grid">
+                            <label>
+                                Álbum existente
+                                <select id="album-select" name="album">
+                                    <option value="Unassigned Album">Unassigned Album</option>
+                                </select>
+                            </label>
+                            <label>
+                                Novo álbum
+                                <input id="album-new" type="text" name="new_album" placeholder="Digite um novo álbum">
+                            </label>
+                        </div>
+                        <label>
+                            Tags
+                            <input id="tags-input" type="text" name="tags" placeholder="#emotional #oldies">
+                        </label>
+                        <p id="tag-hint" class="hint-text">Tags existentes: nenhuma</p>
+                        <button type="submit">Enviar música</button>
+                    </form>
+                </div>
+            </section>
+        </main>
+    </div>
+    
+    <script src="assets/js/app.js" defer></script>
+    <script src="assets/js/storage.js" defer></script>
+    <script src="assets/js/models.js" defer></script>
+    <script src="assets/js/music-player.js" defer></script>
+    <script src="assets/js/controle.js" defer></script>
+</body>
+</html>

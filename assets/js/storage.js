@@ -74,3 +74,5 @@ const storage = {
     return setStorageItem('prefs', prefs);
   })
 };
+
+window.storage = storage;
