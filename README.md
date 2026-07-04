@@ -16,8 +16,22 @@ Pensando nisso, aproveitei a oportunidade de não só resolver esse problema, ma
 - Preferir módulos mais simples do que abstrações Orientadas a Objeto complexas;
 - Manter o fluxo principal compreensível para manutenção futura, fazendo a arquitetura mais fácil de evoluir.
 
+  
+  
 
 ## Requisitos Funcionais
+
+
+## Requisitos Não-Funcionais
+
+- Manter o aplicativo em acordância com os padrões de acessibilidade previstos pela WCAG, especificamente, ao menos:
+<li >
+  <ul>1.4.2 <a href="https://accessibility.build/wcag/1-4-2">Audio Control;</a></ul>
+  <ul>2.5.1 Pointer Gesture;</ul>
+  <ul>2.5.8 <a href="https://accessibility.build/wcag/2-5-8">Target Size;</a></ul>
+  <ul>3.3.1 <a href="https://accessibility.build/wcag/3-3-1">Error Identification;</a></ul>
+  <ul>3.3.2 <a href="https://accessibility.build/wcag/3-3-2">Labels or Instructions;</a></ul>
+</li>
 
 
 ## Tecnologias
