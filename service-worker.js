@@ -1,11 +1,13 @@
 const CACHE_NAME = 'blay-audio-player-v4';
-const CORE_ASSETS = [
+const ASSETS = [
   'index.html',
-  'assets/js/controle.js',
   'assets/js/app.js',
-  'assets/js/storage.js',
-  'assets/js/models.js',
-  'assets/js/music-player.js',
+  'assets/js/playlists.js',
+  'assets/js/songs.js',
+  'assets/js/tags.js',
+  'assets/js/db.js',
+  'assets/js/ffmpeg.js',
+  'assets/js/player.js',
   'assets/css/styles.css',
   'manifest.json',
   'assets/icons/icon.svg',
@@ -16,7 +18,7 @@ self.addEventListener('install', event => {
   self.skipWaiting();
   event.waitUntil(
     caches.open(CACHE_NAME)
-.then(cache => cache.addAll(CORE_ASSETS))
+.then(cache => cache.addAll(ASSETS))
   );
 });
 
@@ -49,7 +51,7 @@ self.addEventListener('fetch', event => {
     return;
   }
 
-  if (CORE_ASSETS.includes(relativePath)) {
+  if (ASSETS.includes(relativePath)) {
     event.respondWith(cacheFirst(request));
     return;
   }

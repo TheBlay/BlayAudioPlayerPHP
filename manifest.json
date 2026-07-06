@@ -5,7 +5,7 @@
   "display": "standalone",
   "background_color": "#121212",
   "theme_color": "#1a1a1a",
-  "description": "Offline-capable music player for downloaded audio files.",
+  "description": "Tocador e biblioteca de música offline com suporte a arquivos locais.",
   "icons": [
     {
       "src": "assets/icons/icon.svg",
