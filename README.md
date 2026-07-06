@@ -15,5 +15,45 @@ Pensando nisso, aproveitei a oportunidade de não só resolver esse problema, ma
 - Separar responsabilidades em camadas claras;
 - Preferir módulos mais simples do que abstrações Orientadas a Objeto complexas;
 - Manter o fluxo principal compreensível para manutenção futura, fazendo a arquitetura mais fácil de evoluir.
-- Usar o PHP futuramente para possibilitar a importação de arquivos da nuvem (via APIs).
+  
 
+## Requisitos Funcionais
+
+
+## <b>Requisitos Não-Funcionais</b>
+Manter o aplicativo em acordância com os padrões de acessibilidade previstos pela WCAG, especificamente, ao menos:
+<li>
+  <ul>1.4.2 <a href="https://accessibility.build/wcag/1-4-2">Audio Control;</a></ul>
+  <ul>2.5.1 Pointer Gesture;</ul>
+  <ul>2.5.8 <a href="https://accessibility.build/wcag/2-5-8">Target Size;</a></ul>
+  <ul>3.3.1 <a href="https://accessibility.build/wcag/3-3-1">Error Identification;</a></ul>
+  <ul>3.3.2 <a href="https://accessibility.build/wcag/3-3-2">Labels or Instructions;</a></ul>
+</li>
+
+
+## <b>Tecnologias</b>
+A aplicação fará uso de recursos comuns que operam com essas funcionalidades, como acesso a sistemas de arquivos, seleção de áudio, incorporação e manipulação do áudio (como tempo e volume ou mais);
+após a seleção inicial, os áudios e metadados serão armazenados localmente, sendo disponibilizados para uso sem que seja necessário ler aquela música do sistema de arquivos novamente.
+Tecnologias cogitadas até o momento incluem:
+- JavaScript;
+- Service Workers, fundamental para o funcionamento offline e carregamento rápido;
+- Manifest de PWA, definindo a possibilidade de instalar nos dispositivos. Tem configurações próprias de ícone e outros;
+  # Controle de Áudio
+- Web Audio API [<a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API/Using_Web_Audio_API">Como usar</a>];
+- Biblioteca <a href="https://howlerjs.com/"><b>Howler.js</b></a> (<a href="https://github.com/goldfire/howler.js#documentation">github</a>), para melhor carregamento de som, playback, controle de volume, looping, fading, e rate adjustment;
+  # Armazenamento
+- IndexedDB para armazenamento local de metadados de músicas;
+  Dexie.js como biblioteca para melhoria do serviço de IndexedDB;
+  
+- Uso da função <i>navigator.storage.persist()</i> para tornar persistentes as músicas baixadas. De acordo com <a href="https://developer.mozilla.org/en-US/docs/Web/API/Storage_API/Storage_quotas_and_eviction_criteria">cotas de armazenamento;</a>
+- File System Access API para acesso aos arquivos locais;
+  Origin Private File System (<a href="https://developer.mozilla.org/en-US/docs/Web/API/File_System_API/Origin_private_file_system">OPFS</a>) para possível armazenamento em origem (para audios webm?) - em análise;
+- File Handling API como opção para abrir músicas dos arquivos usando esse aplicativo, sem precisar abrir diretamente pelo aplicativo;
+
+# <b>Planos Futuros</b>
+- Usar o PHP futuramente para possibilitar a importação de arquivos da nuvem (via APIs).
+- Futuramente, fazer uso da lib yt-dlp para download de músicas. <a href="https://github.com/yt-dlp/yt-dlp#general-options">Acesso ao github.</a>
+- Analisar o uso de ffmpeg. <a href="https://ffmpeg.org/">Página oficial.</a>
+
+# Design
+Cor de Accent: #9177f6 -> Roxo;
