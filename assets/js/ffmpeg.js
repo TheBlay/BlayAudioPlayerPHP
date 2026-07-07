@@ -1,0 +1,1 @@
+//Compressão e normalização de áudio com ffmpeg.wasm antes de enviar para o IndexedDB.
