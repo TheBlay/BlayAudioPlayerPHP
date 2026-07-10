@@ -8,7 +8,7 @@
   "description": "Tocador e biblioteca de música offline com suporte a arquivos locais.",
   "icons": [
     {
-      "src": "assets/icons/icon.svg",
+      "src": "assets/icons/icon512-alt.svg",
       "type": "image/svg+xml",
       "sizes": "any"
     }
