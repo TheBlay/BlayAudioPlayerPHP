@@ -15,7 +15,7 @@ Pensando nisso, aproveitei a oportunidade de não só resolver esse problema, ma
 - Separar responsabilidades em camadas claras;
 - Preferir módulos mais simples do que abstrações Orientadas a Objeto complexas;
 - Manter o fluxo principal compreensível para manutenção futura, fazendo a arquitetura mais fácil de evoluir.
-  
+
 
 ## Requisitos Funcionais
 
@@ -47,7 +47,8 @@ Tecnologias cogitadas até o momento incluem:
   
 - Uso da função <i>navigator.storage.persist()</i> para tornar persistentes as músicas baixadas. De acordo com <a href="https://developer.mozilla.org/en-US/docs/Web/API/Storage_API/Storage_quotas_and_eviction_criteria">cotas de armazenamento;</a>
 - File System Access API para acesso aos arquivos locais;
-  Origin Private File System (<a href="https://developer.mozilla.org/en-US/docs/Web/API/File_System_API/Origin_private_file_system">OPFS</a>) para possível armazenamento em origem (para audios webm?) - em análise;
+- Nunca indexar propriedades que contenham imagens, video ou strings enormes. Pode armazenar no IndexedDB, mas nunca indexar. Se vai numa cláusula where(...), faça i índice, se não, não indexe! <a href="https://dexie.org/docs/Version/Version.stores%28%29">Mais sobre armazenamento via Dexie</a>
+- Origin Private File System (<a href="https://developer.mozilla.org/en-US/docs/Web/API/File_System_API/Origin_private_file_system">OPFS</a>) para possível armazenamento em origem (para audios webm?) - em análise;
 - File Handling API como opção para abrir músicas dos arquivos usando esse aplicativo, sem precisar abrir diretamente pelo aplicativo;
 
 # <b>Planos Futuros</b>
